@@ -1,0 +1,46 @@
+<!--
+	(c) Copyright 2019, Pongsakorn Ritrugsa <poundxi@protonmail.com>
+	This project is licensed under the terms of the MIT license.
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ThaiIDCard-WebAPI | Example</title>
+	</head>
+
+	<body>
+		<form>
+			IDCard <input id="idcard" type="text" value=""><br>
+			<button type="button" id="generate_button">Generate</button>
+			<button type="button" id="verify_button">Verify</button>
+			<button type="reset">Clear</button>
+		</form>
+
+		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"></script>
+
+		<script>
+			var api_url = "http://localhost:8000";
+			$("#generate_button").click(function() {
+				$.getJSON(`${api_url}/?command=generate`, function(json) {
+					$("#idcard").val(json.idcard);
+				});
+			});
+
+			$("#verify_button").click(function() {
+				var idcard = $("#idcard").val();
+				$.getJSON(`${api_url}/?command=verify&idcard=${idcard}`)
+				.done(function(json) {
+					alert(`idcard=${json.idcard}, valid=${json.valid}`);
+				})
+				.fail(function(jqxhr, textStatus, errorMessage) {
+					alert(jqxhr.responseJSON.message);
+				});
+			});
+		</script>
+	</body>
+</html>
